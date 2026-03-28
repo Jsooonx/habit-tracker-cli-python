@@ -38,6 +38,31 @@ def view_habits(habits):
         total = len(habits[name]["checkins"])
         print(f"{i}. {name} - {total} check-in(s)")
         
+def find_habit(habits, name):
+    return next((k for k in habits if k.lower() == name.lower()), None)
+
+def check_in(habits):
+    if not habits:
+        print("No habits yet. Add one first!\n")
+        return
+    
+    view_habits(habits)
+    name = input("Enter habit name to check in: ").strip()
+    
+    match = find_habit(habits, name)
+    if match is None:
+        print(f"Habit '{name}' not found.\n")
+        return
+    
+    today = str(date.today())
+    if today in habits[match]["checkins"]:
+        print(f"You already checked in '{match}' today!\n")
+        return
+    
+    habits[match]["checkins"].append(today)
+    save_habits(habits)
+    print(f"✓ Checked in '{match}' for {today}!\n")
+        
 def main():
     habits = load_habits()
     
@@ -58,7 +83,9 @@ def main():
             view_habits(habits)
         elif choice == '2':
             add_habits(habits)
-        elif choice in ("3", "4", "5", "6"):
+        elif choice == '3':
+            check_in(habits)
+        elif choice in ("4", "5", "6"):
             print("This feature is coming soon!\n")
         elif choice == '0':
             print("See you later!")
