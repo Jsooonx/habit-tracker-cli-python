@@ -96,6 +96,28 @@ def view_streaks(habits):
         fire = "🔥" * min(streak, 5)
         print(f"{name}: {streak} day(s) streak {fire} | {total} total check-in(s)")
     print()
+    
+def delete_habit(habits):
+    if not habits:
+        print("No habits yet. Add one first!\n")
+        return
+    
+    view_habits(habits)
+    name = input("Enter habit name to delete: ").strip()
+    
+    match = find_habit(habits, name)
+    if match is None:
+        print(f"Habit '{name}' not found.\n")
+        return
+    
+    confirm = input(f"Are you sure you want to delete '{match}'? (y/n): ").strip().lower()
+    if confirm != 'y':
+        print("Cancelled.\n")
+        return
+    
+    del habits[match]
+    save_habits(habits)
+    print(f"Habit '{match}' deleted.\n")
         
 def main():
     habits = load_habits()
@@ -121,8 +143,10 @@ def main():
             check_in(habits)
         elif choice == '4':
             view_streaks(habits)
-        elif choice in ("5", "6"):
+        elif choice in ("5"):
             print("This feature is coming soon!\n")
+        elif choice == '6':
+            delete_habit(habits)
         elif choice == '0':
             print("See you later!")
             break
