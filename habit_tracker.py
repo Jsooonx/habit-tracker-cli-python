@@ -62,6 +62,40 @@ def check_in(habits):
     habits[match]["checkins"].append(today)
     save_habits(habits)
     print(f"✓ Checked in '{match}' for {today}!\n")
+    
+def get_streak(checkins):
+    if not checkins:
+        return 0
+    
+    sorted_dates = sorted(date.fromisoformat(d) for d in checkins)
+    today = date.today()
+    
+    # Streak valid if only check-in today or yesterday
+    if (today - sorted_dates[-1]).days > 1:
+        return 0
+    
+    streak = 1
+    for i in range(len(sorted_dates) - 1, 0, -1):
+        diff = (sorted_dates[i] - sorted_dates[i - 1]).days
+        if diff == 1:
+            streak += 1
+        else:
+            break
+        
+    return streak
+
+def view_streaks(habits):
+    if not habits:
+        print("No habits yet. Add one first!\n")
+        return
+    
+    print("=== Streaks ===")
+    for name, data in habits.items():
+        streak = get_streak(data["checkins"])
+        total = len(data["checkins"])
+        fire = "🔥" * min(streak, 5)
+        print(f"{name}: {streak} day(s) streak {fire} | {total} total check-in(s)")
+    print()
         
 def main():
     habits = load_habits()
@@ -85,7 +119,9 @@ def main():
             add_habits(habits)
         elif choice == '3':
             check_in(habits)
-        elif choice in ("4", "5", "6"):
+        elif choice == '4':
+            view_streaks(habits)
+        elif choice in ("5", "6"):
             print("This feature is coming soon!\n")
         elif choice == '0':
             print("See you later!")
