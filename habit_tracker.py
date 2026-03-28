@@ -1,5 +1,6 @@
 import json
 import os
+import csv
 from datetime import date
 
 DATA_FILE = "data/habits.json"
@@ -118,7 +119,26 @@ def delete_habit(habits):
     del habits[match]
     save_habits(habits)
     print(f"Habit '{match}' deleted.\n")
+    
+def export_to_csv(habits):
+    if not habits:
+        print("No habits yet. Add one first!\n")
+        return
+    
+    filename = f"habits-export_{date.today()}.csv"
+    
+    with open(filename, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Habit", "Created", "Total Check-ins", "Current Streak", "Last Check-in"])
         
+        for name, data in habits.items():
+            total = len(data["checkins"])
+            streak = get_streak(data["checkins"])
+            last = data["checkins"][-1] if data["checkins"] else "Never"
+            writer.writerow([name, data["created"], total, streak, last])
+        
+    print(f"Exported to '{filename}' succcessfully!\n")
+    
 def main():
     habits = load_habits()
     
@@ -143,8 +163,8 @@ def main():
             check_in(habits)
         elif choice == '4':
             view_streaks(habits)
-        elif choice in ("5"):
-            print("This feature is coming soon!\n")
+        elif choice == '5':
+            export_to_csv(habits)
         elif choice == '6':
             delete_habit(habits)
         elif choice == '0':
