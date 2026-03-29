@@ -85,17 +85,37 @@ def get_streak(checkins):
         
     return streak
 
+def get_longest_streak(checkins):
+    if not checkins:
+        return 0
+    
+    sorted_dates = sorted(date.fromisoformat(d) for d in checkins)
+    
+    longest = 1
+    current = 1
+    
+    for i in range(1, len(sorted_dates)):
+        diff = (sorted_dates[i] - sorted_dates[i - 1]).days
+        if diff == 1:
+            current += 1
+            longest = max(longest, current)
+        else:
+            current = 1
+            
+    return longest
+
 def view_streaks(habits):
     if not habits:
         print("No habits yet. Add one first!\n")
         return
-    
+
     print("=== Streaks ===")
     for name, data in habits.items():
         streak = get_streak(data["checkins"])
+        longest = get_longest_streak(data["checkins"])
         total = len(data["checkins"])
         fire = "🔥" * min(streak, 5)
-        print(f"{name}: {streak} day(s) streak {fire} | {total} total check-in(s)")
+        print(f"{name}: {streak} day(s) streak {fire} | longest: {longest} day(s) | {total} total check-in(s)")
     print()
     
 def delete_habit(habits):
