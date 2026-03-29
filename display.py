@@ -54,3 +54,23 @@ def weekly_summary(habits):
         bar = Fore.GREEN + "█" * count + Fore.RED + "░" * (7 - count) + Style.RESET_ALL
         print(f"{Style.BRIGHT}{name}{Style.RESET_ALL}: {bar} {count}/7")
     print()
+    
+def show_reminders(habits):
+    if not habits:
+        return
+    
+    today = str(date.today())
+    missing = [name for name, data in habits.items() if today not in data["checkins"]]
+    
+    if not missing:
+        print(Fore.GREEN + Style.BRIGHT + "✓ All habits checked in for today!\n")
+        return
+    
+    print(Fore.YELLOW + Style.BRIGHT + "⚠ Don't forget to check in today:")
+    for name in missing:
+        streak = get_streak(habits[name]["checkins"])
+        if streak > 0:
+            print(Fore.YELLOW + f"  • {name} — {streak} day(s) streak at risk 🔥")
+        else:
+            print(Fore.WHITE + f"  • {name}")
+    print()

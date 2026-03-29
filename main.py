@@ -1,13 +1,14 @@
 from colorama import init, Fore, Style
 from storage import load_habits
 from habits import add_habit, check_in, delete_habit
-from display import view_habits, view_streaks, weekly_summary
+from display import view_habits, view_streaks, weekly_summary, show_reminders
 from export import export_to_csv
 
 init(autoreset=True)
 
 def main():
     habits = load_habits()
+    show_reminders(habits)
 
     while True:
         print(Fore.CYAN + Style.BRIGHT + "=== HABIT TRACKER ===")
