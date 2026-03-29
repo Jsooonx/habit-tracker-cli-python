@@ -1,7 +1,7 @@
 import json
 import os
 import csv
-from datetime import date
+from datetime import date, timedelta
 
 DATA_FILE = "data/habits.json"
 
@@ -118,6 +118,22 @@ def view_streaks(habits):
         print(f"{name}: {streak} day(s) streak {fire} | longest: {longest} day(s) | {total} total check-in(s)")
     print()
     
+def weekly_summary(habits):
+    if not habits:
+        print("No habits yet. Add one first!\n")
+        return
+    
+    today = date.today()
+    week_dates = {str(today - timedelta(days=i)) for i in range(7)}
+    
+    print("=== Weekly Summary (Last 7 Days) ===")
+    for name, data in habits.items():
+        checkins_this_week = [d for d in data["checkins"] if d in week_dates]
+        count = len(checkins_this_week)
+        bar = "█" * count + "░" * (7 - count)
+        print(f"{name}: {bar} {count}/7")
+    print()
+    
 def delete_habit(habits):
     if not habits:
         print("No habits yet. Add one first!\n")
@@ -168,26 +184,29 @@ def main():
         print("2. Add new habit")
         print("3. Check in for today")
         print("4. View streaks")
-        print("5. Export to CSV")
-        print("6. Delete a habit")
+        print("5. Weekly summary")
+        print("6. Export to CSV")
+        print("7. Delete a habit")
         print("0. Exit")
         
         choice = input("\nChoose an option: ").strip()
         print()
         
-        if choice == '1':
+        if choice == "1":
             view_habits(habits)
-        elif choice == '2':
-            add_habits(habits)
-        elif choice == '3':
+        elif choice == "2":
+            add_habit(habits)
+        elif choice == "3":
             check_in(habits)
-        elif choice == '4':
+        elif choice == "4":
             view_streaks(habits)
-        elif choice == '5':
+        elif choice == "5":
+            weekly_summary(habits)
+        elif choice == "6":
             export_to_csv(habits)
-        elif choice == '6':
+        elif choice == "7":
             delete_habit(habits)
-        elif choice == '0':
+        elif choice == "0":
             print("See you later!")
             break
         else:
