@@ -12,7 +12,7 @@ A command-line habit tracker built with Python. Track your daily habits, monitor
 
 ## Getting Started
 
-No external libraries required — only Python 3 standard library.
+No external libraries required - only Python 3 standard library.
 ```bash
 git clone https://github.com/yourusername/habit-tracker-cli.git
 cd habit-tracker-cli
