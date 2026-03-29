@@ -1,0 +1,6 @@
+# Exported CSV files
+habits-export_2026-03-28.csv
+
+# Python cache
+__pycache__/
+*.pyc
