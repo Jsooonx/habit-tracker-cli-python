@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 ## Getting Started
 ```bash
-git clone https://github.com/yourusername/habit-tracker-cli.git
+git clone https://github.com/Jsooonx/habit-tracker-cli.git
 cd habit-tracker-cli
 pip install -r requirements.txt
 python main.py
